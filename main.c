@@ -9,7 +9,8 @@ void Menu()
     printf("2. Display Students\n");
     printf("3. Search Student\n");
     printf("4. Delete Student\n");
-    printf("5. Exit\n");
+    printf("5. Edit Student\n");
+    printf("6. Exit\n");
     printf("Enter your choice: ");
 }
 int main()
@@ -36,6 +37,9 @@ int main()
             DeleteStudent();
             break;
         case 5:
+            EditStudent();
+            break;
+        case 6:
             printf("Exiting...\n");
             exit(0);
             break;

@@ -11,5 +11,6 @@ void AddStudent();
 void DisplayStudent();
 void SearchStudent();
 void DeleteStudent();
+void EditStudent();
 
 #endif // STUDENT_H

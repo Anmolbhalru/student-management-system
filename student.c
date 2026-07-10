@@ -41,7 +41,7 @@ void DisplayStudent()
     printf("Roll\tName\t\tMarks\n");
     printf("-----\t----\t\t-----\n");
 
-    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) != EOF)
+    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) == 3)
     {
         printf("%d\t%s\t\t%.2f\n", student.roll, student.name, student.marks);
     }
@@ -134,6 +134,59 @@ void DeleteStudent()
     else
     {
         remove("temp.txt"); // Clean up temp file if no deletion occurred
+        printf("Student not found!\n");
+    }
+}
+void EditStudent()
+{
+    struct Student student;
+    int rollToEdit;
+
+    printf("Enter Roll Number to edit: ");
+    scanf("%d", &rollToEdit);
+
+    FILE *fp = fopen("students.txt", "r");
+    FILE *tempFp = fopen("temp.txt", "w");
+
+    if (fp == NULL || tempFp == NULL)
+    {
+        printf("Error opening file!\n");
+
+        if (fp != NULL)
+            fclose(fp);
+
+        if (tempFp != NULL)
+            fclose(tempFp);
+
+        return;
+    }
+
+    int found = 0;
+    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) == 3)
+    {
+        if (student.roll == rollToEdit)
+        {
+            found = 1;
+            printf("Enter new Name: ");
+            scanf("%s", student.name);
+            printf("Enter new Marks: ");
+            scanf("%f", &student.marks);
+        }
+        fprintf(tempFp, "%d %s %.2f\n", student.roll, student.name, student.marks);
+    }
+
+    fclose(fp);
+    fclose(tempFp);
+
+    if (found)
+    {
+        remove("students.txt");
+        rename("temp.txt", "students.txt");
+        printf("Student edited successfully!\n");
+    }
+    else
+    {
+        remove("temp.txt"); // Clean up temp file if no edit occurred
         printf("Student not found!\n");
     }
 }
