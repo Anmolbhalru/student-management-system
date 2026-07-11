@@ -1,19 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "student.h"
+#include "validation.h"
+
 
 void AddStudent()
 {
     struct Student newStudent;
 
-    printf("Enter Roll Number: ");
-    scanf("%d", &newStudent.roll);
-
-    printf("Enter Name: ");
-    scanf("%s", newStudent.name);
-
-    printf("Enter Marks: ");
-    scanf("%f", &newStudent.marks);
+    newStudent.roll = GetValidRollNumber();
+    ClearInputBuffer();
+    GetValidName(newStudent.name);
+    newStudent.marks = GetValidMarks();
 
     FILE *fp = fopen("students.txt", "a");
 
@@ -100,19 +99,19 @@ void DeleteStudent()
     FILE *tempFp = fopen("temp.txt", "w");
 
     if (fp == NULL || tempFp == NULL)
-{
-    printf("Error opening file!\n");
+    {
+        printf("Error opening file!\n");
 
-    if (fp != NULL)
-        fclose(fp);
+        if (fp != NULL)
+            fclose(fp);
 
-    if (tempFp != NULL)
-        fclose(tempFp);
+        if (tempFp != NULL)
+            fclose(tempFp);
 
-    return;
-}
+        return;
+    }
     int found = 0;
-    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) ==3)
+    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) == 3)
     {
         if (student.roll == rollToDelete)
         {
@@ -189,4 +188,27 @@ void EditStudent()
         remove("temp.txt"); // Clean up temp file if no edit occurred
         printf("Student not found!\n");
     }
+}
+int RollNumberExists(int roll)
+{
+    struct Student student;
+    FILE *fp = fopen("students.txt", "r");
+
+    if (fp == NULL)
+    {
+        printf("Error opening file!\n");
+        return 0; // Return 0 if file cannot be opened
+    }
+
+    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) == 3)
+    {
+        if (student.roll == roll)
+        {
+            fclose(fp);
+            return 1; // Roll number exists
+        }
+    }
+
+    fclose(fp);
+    return 0; // Roll number does not exist
 }

@@ -1,9 +1,10 @@
 #ifndef STUDENT_H
 #define STUDENT_H
+#define NAME_SIZE 50
 
 struct Student {
     int roll;
-    char name[50];
+    char name[NAME_SIZE];
     float marks;
 };
 
@@ -12,5 +13,7 @@ void DisplayStudent();
 void SearchStudent();
 void DeleteStudent();
 void EditStudent();
+int RollNumberExists(int roll);
+
 
 #endif // STUDENT_H
