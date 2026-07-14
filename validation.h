@@ -4,7 +4,7 @@
 
 int GetValidRollNumber();
 float GetValidMarks();
-void GetValidName(char name[NAME_SIZE]);
+void GetValidName(char name[]);
 int RollNumberExists(int roll);
 void ClearInputBuffer();
 

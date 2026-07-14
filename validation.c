@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "validation.h"
+#include "student.h"
 #define NAME_SIZE 50
 
 int GetValidRollNumber()
@@ -60,4 +61,27 @@ void GetValidName(char name[])
             printf("Name cannot be empty! Please enter a valid name: ");
         }
     } while (strlen(name) == 0);
+}
+int RollNumberExists(int roll)
+{
+    struct Student student;
+    FILE *fp = fopen("students.txt", "r");
+
+    if (fp == NULL)
+    {
+        printf("Error opening file!\n");
+        return 0; // Return 0 if file cannot be opened
+    }
+
+    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) == 3)
+    {
+        if (student.roll == roll)
+        {
+            fclose(fp);
+            return 1; // Roll number exists
+        }
+    }
+
+    fclose(fp);
+    return 0; // Roll number does not exist
 }

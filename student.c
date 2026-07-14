@@ -4,7 +4,6 @@
 #include "student.h"
 #include "validation.h"
 
-
 void AddStudent()
 {
     struct Student newStudent;
@@ -189,7 +188,7 @@ void EditStudent()
         printf("Student not found!\n");
     }
 }
-int RollNumberExists(int roll)
+void ShowStatistics()
 {
     struct Student student;
     FILE *fp = fopen("students.txt", "r");
@@ -197,18 +196,80 @@ int RollNumberExists(int roll)
     if (fp == NULL)
     {
         printf("Error opening file!\n");
-        return 0; // Return 0 if file cannot be opened
+        return;
     }
+
+    int totalStudents = 0;
+    float totalMarks = 0.0;
+    float highestMarks = 0.0;
+    float lowestMarks = 100.0;
 
     while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) == 3)
     {
-        if (student.roll == roll)
-        {
-            fclose(fp);
-            return 1; // Roll number exists
-        }
+        totalStudents++;
+
+        totalMarks += student.marks;
+
+        if (student.marks > highestMarks)
+            highestMarks = student.marks;
+
+        if (student.marks < lowestMarks)
+            lowestMarks = student.marks;
     }
 
     fclose(fp);
-    return 0; // Roll number does not exist
+
+    if (totalStudents == 0)
+    {
+        printf("No students found!\n");
+        return;
+    }
+
+    float averageMarks = totalMarks / totalStudents;
+
+    printf("===============================================\n");
+    printf("\tStudent Statistics \n");
+    printf("===============================================\n");
+    printf("Total Students: %d\n", totalStudents);
+    printf("Average Marks: %.2f\n", averageMarks);
+    printf("Highest Marks: %.2f\n", highestMarks);
+    printf("Lowest Marks: %.2f\n", lowestMarks);
+}
+void SearchStudentByName()
+{
+    struct Student student;
+    char nameToSearch[NAME_SIZE];
+
+    ClearInputBuffer(); // Clear the input buffer before reading the name
+    GetValidName(nameToSearch);
+
+    FILE *fp = fopen("students.txt", "r");
+
+    if (fp == NULL)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+
+    int found = 0;
+    while (fscanf(fp, "%d %s %f", &student.roll, student.name, &student.marks) == 3)
+    {
+        if (strcmp(student.name, nameToSearch) == 0)
+        {
+            printf("======Student found!======\n");
+            printf("Roll: %d\n", student.roll);
+            printf("Name: %s\n", student.name);
+            printf("Marks: %.2f\n", student.marks);
+            printf("==========================\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        printf("Student not found!\n");
+    }
+
+    fclose(fp);
 }
